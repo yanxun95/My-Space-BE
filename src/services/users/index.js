@@ -4,9 +4,19 @@ import { basicAuthMiddleware } from "../../auth/basic.js";
 import { JWTAuthenticate } from "../../auth/tools.js";
 import { JWTAuthMiddleware } from "../../auth/token.js";
 import createHttpError from "http-errors";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import passport from "passport";
 
 const userRouter = express.Router();
+
+const cloudStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "MySpaceUser",
+  },
+});
 
 userRouter.post("/register", async (req, res, next) => {
   try {
@@ -72,6 +82,25 @@ userRouter.put("/:id", JWTAuthMiddleware, async (req, res, next) => {
     next(error);
   }
 });
+
+userRouter.post(
+  "/:userId/picture",
+  JWTAuthMiddleware,
+  multer({ storage: cloudStorage }).single("userImg"),
+  async (req, res, next) => {
+    try {
+      const userId = req.params.userId;
+      const userImage = await UserModel.findByIdAndUpdate(
+        userId,
+        { $set: { image: req.file.path } },
+        { new: true }
+      );
+      res.send(userImage);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 userRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
   try {

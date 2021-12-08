@@ -9,6 +9,7 @@ const userSchema = new Schema(
     surname: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String },
+    image: { type: String },
     googleId: { type: String },
     friends: [{ type: Schema.ObjectId, ref: "friend" }],
   },

@@ -4,8 +4,18 @@ import CommentModel from "../comments/schema.js";
 import { JWTAuthMiddleware } from "../../auth/token.js";
 import mongoose from "mongoose";
 import createHttpError from "http-errors";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const postRouter = express.Router();
+
+const cloudStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "MySpacePost",
+  },
+});
 
 postRouter.post("/:profileId", JWTAuthMiddleware, async (req, res, next) => {
   try {
@@ -71,6 +81,25 @@ postRouter.delete("/:postId", JWTAuthMiddleware, async (req, res, next) => {
     next(error);
   }
 });
+
+postRouter.post(
+  "/:postId/picture",
+  JWTAuthMiddleware,
+  multer({ storage: cloudStorage }).single("postImg"),
+  async (req, res, next) => {
+    try {
+      const postId = req.params.postId;
+      const postImage = await PostModel.findByIdAndUpdate(
+        postId,
+        { $set: { img: req.file.path } },
+        { new: true }
+      );
+      res.send(postImage);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 postRouter.post(
   "/:postId/:userId/comment",
