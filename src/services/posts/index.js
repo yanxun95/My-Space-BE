@@ -42,6 +42,29 @@ postRouter.get("/", async (req, res, next) => {
   }
 });
 
+postRouter.get("/:postId", async (req, res, next) => {
+  try {
+    const posts = await PostModel.findById(req.params.postId);
+    if (posts) res.send(posts);
+    else
+      next(
+        createHttpError(404, `Post with id ${req.params.postId} is not found`)
+      );
+  } catch (error) {
+    next(error);
+  }
+});
+
+postRouter.get("/user/:userId", async (req, res, next) => {
+  try {
+    const userPosts = await PostModel.find({ user: req.params.userId });
+    if (userPosts) res.send(userPosts);
+    else next(createHttpError(404, `User haven't write any post`));
+  } catch (error) {
+    next(error);
+  }
+});
+
 postRouter.put("/:postId", JWTAuthMiddleware, async (req, res, next) => {
   try {
     const postId = req.params.postId;

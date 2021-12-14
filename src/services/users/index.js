@@ -84,7 +84,7 @@ userRouter.put("/:id", JWTAuthMiddleware, async (req, res, next) => {
 });
 
 userRouter.post(
-  "/:userId/picture",
+  "/:userId/userImage",
   JWTAuthMiddleware,
   multer({ storage: cloudStorage }).single("userImg"),
   async (req, res, next) => {
@@ -92,10 +92,29 @@ userRouter.post(
       const userId = req.params.userId;
       const userImage = await UserModel.findByIdAndUpdate(
         userId,
-        { $set: { image: req.file.path } },
+        { $set: { userImage: req.file.path } },
         { new: true }
       );
       res.send(userImage);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+userRouter.post(
+  "/:userId/bgImage",
+  JWTAuthMiddleware,
+  multer({ storage: cloudStorage }).single("bgImg"),
+  async (req, res, next) => {
+    try {
+      const userId = req.params.userId;
+      const bgImage = await UserModel.findByIdAndUpdate(
+        userId,
+        { $set: { bgImage: req.file.path } },
+        { new: true }
+      );
+      res.send(bgImage);
     } catch (error) {
       next(error);
     }
