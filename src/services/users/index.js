@@ -1,5 +1,6 @@
 import express from "express";
 import UserModel from "./schema.js";
+import CustomiseModel from "../customise/schema.js";
 import { basicAuthMiddleware } from "../../auth/basic.js";
 import { JWTAuthenticate } from "../../auth/tools.js";
 import { JWTAuthMiddleware } from "../../auth/token.js";
@@ -8,6 +9,7 @@ import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import passport from "passport";
+import mongoose from "mongoose";
 
 const userRouter = express.Router();
 
@@ -22,6 +24,16 @@ userRouter.post("/register", async (req, res, next) => {
   try {
     const newUser = new UserModel(req.body);
     const { _id } = await newUser.save();
+    const customiseLocation = new CustomiseModel({
+      userId: mongoose.Types.ObjectId(_id),
+      userInfo: "",
+      userBgImage: "",
+      postUserInfo: "",
+      postUserContent: "",
+      postUserImage: "",
+      postUserFunctionBar: "",
+    });
+    await customiseLocation.save();
     res.status(201).send({ _id });
   } catch (error) {
     next(error);
