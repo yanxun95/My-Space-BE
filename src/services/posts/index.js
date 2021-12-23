@@ -177,7 +177,7 @@ postRouter.delete(
 );
 
 postRouter.put(
-  "/comment/:commentId/",
+  "/comment/:commentId",
   JWTAuthMiddleware,
   async (req, res, next) => {
     try {

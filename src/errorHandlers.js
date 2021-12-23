@@ -14,6 +14,14 @@ export const forbiddenHandler = (err, req, res, next) => {
   }
 };
 
+export const unauthorizedHandler = (err, req, res, next) => {
+  if (err.status === 401) {
+    res.status(err.status).send({ message: err.message || "Unauthorized!" });
+  } else {
+    next(err);
+  }
+};
+
 export const badRequestHandler = (err, req, res, next) => {
   if (err.status === 400 || err.name === "ValidationError") {
     res.status(400).send({ message: err.errors || "Bad Request!" });
