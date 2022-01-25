@@ -6,10 +6,8 @@ const customiseSchema = new Schema({
   userId: { type: Schema.ObjectId, ref: "user" },
   userInfo: { type: String },
   userBgImage: { type: String },
-  postUserInfo: { type: String },
-  postUserContent: { type: String },
-  postUserImage: { type: String },
-  postUserFunctionBar: { type: String },
+  mainPosition: { type: String },
+  postPosition: { type: String },
 });
 
 customiseSchema.methods.toJSON = function () {

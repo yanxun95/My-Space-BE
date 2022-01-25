@@ -28,10 +28,8 @@ userRouter.post("/register", async (req, res, next) => {
       userId: mongoose.Types.ObjectId(_id),
       userInfo: "0px, 0px, 0px",
       userBgImage: "0px, 0px, 0px",
-      postUserInfo: "0px, 0px, 0px",
-      postUserContent: "0px, 0px, 0px",
-      postUserImage: "0px, 0px, 0px",
-      postUserFunctionBar: "0px, 0px, 0px",
+      mainPosition: "",
+      postPosition: "",
     });
     await customiseLocation.save();
     res.status(201).send({ _id });
@@ -47,13 +45,12 @@ userRouter.post("/login", async (req, res, next) => {
 
     if (user) {
       const accessToken = await JWTAuthenticate(user);
-      console.log({ token: accessToken });
       res
         .status(201)
         .cookie("accessToken", accessToken, {
           httpOnly: false,
         })
-        .send({ _id: user._id });
+        .send(user);
     } else {
       next(createHttpError(401, "Credentials are not ok!"));
     }
@@ -125,7 +122,6 @@ userRouter.post(
   JWTAuthMiddleware,
   multer({ storage: cloudStorage }).single("bgImg"),
   async (req, res, next) => {
-    console.log(req.params.userId);
     try {
       const userId = req.params.userId;
       const bgImage = await UserModel.findByIdAndUpdate(
@@ -142,7 +138,6 @@ userRouter.post(
 
 userRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
   try {
-    console.log(req.user);
     res.send(req.user);
   } catch (error) {
     next(error);

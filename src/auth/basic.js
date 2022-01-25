@@ -10,14 +10,14 @@ export const basicAuthMiddleware = async (req, res, next) => {
       createHttpError(401, "Please provide credentials in Authorization header")
     );
   } else {
-    console.log(req.headers.authorization);
+    // console.log(req.headers.authorization);
     // 2. If we have received the Authorization header we will need to extract the credentials from it (which is base64 encoded, therefore we should translate it obtaining normal text)
     const decodedCredentials = atob(req.headers.authorization.split(" ")[1]);
-    console.log(decodedCredentials);
+    // console.log(decodedCredentials);
 
     const [email, password] = decodedCredentials.split(":");
-    console.log("EMAIL ", email);
-    console.log("PASSWORD ", password);
+    // console.log("EMAIL ", email);
+    // console.log("PASSWORD ", password);
 
     // 3. Once we obtain plain credentials (diego@strive.com:1234), we need to find the user in db, compare received pw with the hashed one, if they are not ok --> trigger an error (401)
 

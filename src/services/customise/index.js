@@ -26,10 +26,8 @@ customiseRouter.put("/", JWTAuthMiddleware, async (req, res, next) => {
       {
         userInfo: req.body.userInfo,
         userBgImage: req.body.userBgImage,
-        postUserInfo: req.body.postUserInfo,
-        postUserContent: req.body.postUserContent,
-        postUserImage: req.body.postUserImage,
-        postUserFunctionBar: req.body.postUserFunctionBar,
+        mainPosition: req.body.mainPosition,
+        postPosition: req.body.postPosition,
       },
       { new: true }
     );
