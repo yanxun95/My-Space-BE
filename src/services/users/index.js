@@ -22,17 +22,23 @@ const cloudStorage = new CloudinaryStorage({
 
 userRouter.post("/register", async (req, res, next) => {
   try {
-    const newUser = new UserModel(req.body);
-    const { _id } = await newUser.save();
-    const customiseLocation = new CustomiseModel({
-      userId: mongoose.Types.ObjectId(_id),
-      userInfo: "0px, 0px, 0px",
-      userBgImage: "0px, 0px, 0px",
-      mainPosition: "",
-      postPosition: "",
-    });
-    await customiseLocation.save();
-    res.status(201).send({ _id });
+    const { email } = req.body;
+    const findEmail = await UserModel.findOne({ email });
+    if (findEmail) {
+      res.status(200).send("The email is already exist!");
+    } else {
+      const newUser = new UserModel(req.body);
+      const { _id } = await newUser.save();
+      const customiseLocation = new CustomiseModel({
+        userId: mongoose.Types.ObjectId(_id),
+        userInfo: "0px, 0px, 0px",
+        userBgImage: "0px, 0px, 0px",
+        mainPosition: "",
+        postPosition: "",
+      });
+      await customiseLocation.save();
+      res.status(201).send({ _id });
+    }
   } catch (error) {
     next(error);
   }
@@ -61,7 +67,7 @@ userRouter.post("/login", async (req, res, next) => {
 
 userRouter.get("/", async (req, res, next) => {
   try {
-    const user = await UserModel.find();
+    const user = await UserModel.find().limit(100);
     res.send(user);
   } catch (error) {
     next(error);
@@ -135,13 +141,5 @@ userRouter.post(
     }
   }
 );
-
-userRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
-  try {
-    res.send(req.user);
-  } catch (error) {
-    next(error);
-  }
-});
 
 export default userRouter;

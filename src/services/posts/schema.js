@@ -8,7 +8,6 @@ const postSchema = new Schema(
     user: { type: Schema.ObjectId, ref: "user" },
     content: { type: String, required: true },
     likes: { type: Number, default: 0 },
-    userName: { type: String },
   },
   {
     timestamps: true,
@@ -23,6 +22,13 @@ postSchema.methods.toJSON = function () {
   delete postObject.user.__v;
   delete postObject.user.createdAt;
   delete postObject.user.updatedAt;
+  delete postObject.user.friends;
+  delete postObject.user.bgImage;
+  delete postObject.user.work;
+  delete postObject.user.location;
+  delete postObject.user.education;
+  delete postObject.user.dob;
+  delete postObject.user.email;
 
   return postObject;
 };

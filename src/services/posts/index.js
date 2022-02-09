@@ -1,6 +1,7 @@
 import express from "express";
 import PostModel from "./schema.js";
 import CommentModel from "../comments/schema.js";
+import LikeModel from "../likes/schema.js";
 import { JWTAuthMiddleware } from "../../auth/token.js";
 import mongoose from "mongoose";
 import createHttpError from "http-errors";
@@ -57,7 +58,9 @@ postRouter.get("/:postId", async (req, res, next) => {
 
 postRouter.get("/user/:userId", async (req, res, next) => {
   try {
-    const userPosts = await PostModel.find({ user: req.params.userId });
+    const userPosts = await PostModel.find({
+      user: req.params.userId,
+    }).populate("user");
     if (userPosts) res.send(userPosts);
     else next(createHttpError(404, `User haven't write any post`));
   } catch (error) {
@@ -200,5 +203,37 @@ postRouter.put(
     }
   }
 );
+
+postRouter.post("/:postId/like", JWTAuthMiddleware, async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+
+    const hasLiked = await LikeModel.find({ postId: postId, userId: userId });
+    if (hasLiked.length === 0) {
+      const newLike = new LikeModel({
+        ...req.body,
+        postId: mongoose.Types.ObjectId(req.params.postId),
+      });
+      newLike.save();
+      await PostModel.findByIdAndUpdate(
+        postId,
+        { $inc: { likes: 1 } },
+        { new: true }
+      );
+    } else {
+      await LikeModel.deleteOne({ postid: postId, userId: userId });
+      await PostModel.findByIdAndUpdate(
+        postId,
+        { $inc: { likes: -1 } },
+        { new: true }
+      );
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default postRouter;

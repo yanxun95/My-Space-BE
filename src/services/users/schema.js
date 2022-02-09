@@ -10,7 +10,11 @@ const userSchema = new Schema(
     email: { type: String, required: true },
     dob: { type: String },
     password: { type: String },
-    userImage: { type: String },
+    userImage: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dobdsx6ge/image/upload/v1644180026/MySpaceUser/userimageplaceholder_nrutpa.jpg",
+    },
     bgImage: { type: String },
     location: { type: String },
     education: { type: String },

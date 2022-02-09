@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 const customiseRouter = express.Router();
 
-customiseRouter.get("/:userId", JWTAuthMiddleware, async (req, res, next) => {
+customiseRouter.get("/:userId", async (req, res, next) => {
   try {
     const customiseId = await CustomiseModel.find({
       userId: req.params.userId,
