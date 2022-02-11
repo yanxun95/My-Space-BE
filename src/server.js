@@ -13,6 +13,7 @@ import { createServer } from "http";
 import userRouter from "./services/users/index.js";
 import postRouter from "./services/posts/index.js";
 import customiseRouter from "./services/customise/index.js";
+import likeRouter from "./services/likes/index.js";
 import cookieParser from "cookie-parser";
 // import createSocketServer from "./socket.js";
 
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/customise", customiseRouter);
+app.use("/like", likeRouter);
 
 // ************************** ERROR HANDLERS ***************************
 app.use(notFoundHandler);

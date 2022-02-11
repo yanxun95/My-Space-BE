@@ -19,6 +19,12 @@ commentSchema.methods.toJSON = function () {
   delete commentObject.user.friends;
   delete commentObject.user.createdAt;
   delete commentObject.user.updatedAt;
+  delete commentObject.user.email;
+  delete commentObject.user.dob;
+  delete commentObject.user.education;
+  delete commentObject.user.location;
+  delete commentObject.user.work;
+  delete commentObject.user.bgImage;
   delete commentObject.user.__v;
 
   return commentObject;
