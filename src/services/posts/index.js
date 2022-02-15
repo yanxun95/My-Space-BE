@@ -35,8 +35,6 @@ postRouter.post("/:profileId", JWTAuthMiddleware, async (req, res, next) => {
 postRouter.get("/", async (req, res, next) => {
   try {
     const posts = await PostModel.find().populate("user");
-    // likes
-
     res.send(posts);
   } catch (error) {
     next(error);

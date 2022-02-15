@@ -35,6 +35,7 @@ userRouter.post("/register", async (req, res, next) => {
         userBgImage: "0px, 0px, 0px",
         mainPosition: "",
         postPosition: "",
+        upLeftContainerPosition: "",
       });
       await customiseLocation.save();
       res.status(201).send({ _id });

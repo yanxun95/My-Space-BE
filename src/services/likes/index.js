@@ -11,8 +11,7 @@ likeRouter.get("/:postId/:userId", async (req, res, next) => {
       postId: mongoose.Types.ObjectId(req.params.postId),
       userId: mongoose.Types.ObjectId(req.params.userId),
     });
-    if (like) res.status(302).send(like);
-    else next(createHttpError(404, `The user haven't like this post.`));
+    like.length > 0 ? res.send(true) : res.send(false);
   } catch (error) {
     next(error);
   }

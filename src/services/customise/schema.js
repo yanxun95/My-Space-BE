@@ -8,6 +8,7 @@ const customiseSchema = new Schema({
   userBgImage: { type: String },
   mainPosition: { type: String },
   postPosition: { type: String },
+  upLeftContainerPosition: { type: String },
 });
 
 customiseSchema.methods.toJSON = function () {
